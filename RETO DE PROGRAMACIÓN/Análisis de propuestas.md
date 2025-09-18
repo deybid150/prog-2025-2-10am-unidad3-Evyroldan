@@ -1,43 +1,114 @@
 # Análisis propuestas del RETO:
 
-1. **Se consulta el precio de un vuelo para una aerolinea, se necesita identificar el gasto del viaje en base a la variacion del peso en el vuelo por gasto de combustible y la distancia que recorre el avión. Para luego hacer una comparación de la venta de tiquetes y los gastos en combustible y confirmar si el vuelo es rentable para la aerolínea o no.**
+1. **Se consulta el precio de un vuelo de un A380 para una aerolinea, se necesita identificar el gasto del viaje en base a la variacion del peso en el vuelo por gasto de combustible y la distancia que recorre el avión. Para luego hacer una comparación de la venta de tiquetes y los gastos en combustible y confirmar si el vuelo es rentable para la aerolínea o no.**
 
 ## Análisis
 
 **variables de entrada**
 |nombre|tipo|comentario|
 |--------------------|----|----------|
-|PI|float|peso inicial de la aeronave|
 |CC|float|cantidad de combustible|
 |NT|int|el numero de asientos vendidos|
 |T|float|Tiempo de vuelo que recorre el avion|
 |VT|float|valor del tiquete|
 
+**constantes**
+|nombre|tipo|comentario|valor|
+|------|----|----------|-----|
+|PA|float|peso de la aeronave|276.800 kg|
+|GH|float|gasto de combustible por hora|12,000kg|
+|VC|float|precio del combustible por kilogramo|US$ 0,70|
+
 **variables de control**
 |nombre|tipo|comentario|
 |------|----|----------|
-|PC_U|float|peso por unidad de combustible|
 |H|int|hora de vuelo|
-|GH|float|gasto de combustible por hora|
+|e|booleana|determina si sale o no del menu|
+|O|int|define el menu y sus opciones|
+
+**variables intermedias**
+|nombre|tipo|comentario|
+|------|----|----------|
 |P|float|peso|peso total de la aeronave cada hora|
-|VC|float|precio del combustible|
-|VV|float|precio del viaje en base al combustible|
 |ST|float|la suma de los tiquetes vendidos|
+|VV|float|Costo toatl del combustible|
 
 **variables de salida**
 |nombre|tipo|comentario|
 |------|----|----------|
-|R|float|la rentabilidad o perdida resultante|
-|E|booleana|determina si es viable o no|
+|viabilidad|STR|determina si es viable o no|
+|G|float|ganancia o perdida|
 
 ## Pseudocódigo
 ```
-Inicio
+INICIO
+    DEFINIR GH = 12000        
+    DEFINIR PA = 276800       
+    DEFINIR VC = 0.70         
+    DEFINIR e = VERDADERO
 
+    MIENTRAS e = VERDADERO HACER
+        MOSTRAR "C. Calcular rentabilidad de vuelo"
+        MOSTRAR "S. Salir"
+        LEER O
+        CONVERTIR O A MAYÚSCULA
 
+        SEGUN O HACER
+            CASO "C":
+                h ← 0
+                LEER CC (cantidad de combustible en kg, entre 40.000 y 254.000)
+                SI CC ES VÁLIDO ENTONCES
+                    LEER NT (número de tickets vendidos, máximo 853)
+                    SI NT ES VÁLIDO ENTONCES
+                        LEER VT (precio de ticket, entre 400 y 1500)
+                        SI VT ES VÁLIDO ENTONCES
+                            LEER T (duración del vuelo en horas, entre 2 y 16)
+                            SI T ES VÁLIDO ENTONCES
+                                ST = NT * VT             
+                                VV = CC * VC              
+                                G = ST - VV               
+
+                                MIENTRAS h < T HACER
+                                    CC = CC - GH         
+                                    h = h + 1
+                                    SI CC <= 0 ENTONCES
+                                        MOSTRAR "Vuelo inviable, sin combustible en hora", h
+                                        MOSTRAR "Pérdida:", G
+                                        SALIR DEL BUCLE
+                                    FIN SI
+                                FIN MIENTRAS
+
+                                SI CC > 0 ENTONCES
+                                    SI G < 0 ENTONCES
+                                        MOSTRAR "Vuelo no rentable. Pérdida:", G
+                                    SINO
+                                        MOSTRAR "Vuelo rentable. Ganancia:", G
+                                    FIN SI
+                                FIN SI
+                            SINO
+                                MOSTRAR "Duración no permitida"
+                            FIN SI
+                        SINO
+                            MOSTRAR "Precio no válido"
+                        FIN SI
+                    SINO
+                        MOSTRAR "Número de asientos inválido"
+                    FIN SI
+                SINO
+                    MOSTRAR "Cantidad de combustible no válida"
+                FIN SI
+            CASO "S":
+                e ← FALSO
+            CASO OTRO:
+                MOSTRAR "Modo no válido"
+        FIN SEGUN
+    FIN MIENTRAS
+FIN
+    
+
+```
 
 2. **Se requiere hacer el registro del mantenimiento de la aeronave de tipo A350-900 para poder autorizar su operación. A dichas aeronaves se les debe hacer un chequeo de mantenimiento del sistema hidráulico cada 600 horas de vuelo, y del sistema eléctrico, cada 400 horas, y además del sistema de aire acondicionado. Si hay una falla en el sistema hidráulico se debe hacer una reparación frenando la operación 2 días, en el sistema eléctrico de 3 días, pero si hay una falla en el sistema de aire acondicionado, el avión puede operar, pero con la restricción de volar hasta los 10.000 pies.**
-```
 
 ## Análisis
 
